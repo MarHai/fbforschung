@@ -56,22 +56,25 @@ function scrollHandler() {
                 res[e].setAttribute('parentID', posts[u].id);
                 res[e].setAttribute('configColumn',interactionSelectors[i].configColumn);
                 res[e].setAttribute('attributeSelector',interactionSelectors[i].attribute);
-                res[e].addEventListener(interactionSelectors[i].event, function(event) {
-                    var parentID = event.target.attributes["parentID"].value;
-                    var configColumn = event.target.attributes["configColumn"].value;
-                    var attributeSelector = event.target.attributes['attributeSelector'].value;
-                    var attribute = getAttribute(attributeSelector,event.target);
-                    var interaction = {'action': 'interaction',
-                        'id':parentID,
-                        'column':configColumn,
-                        'attribute':attribute};
-
-                    ext.runtime.sendMessage( interaction,function(result){
-                    });
-                });
+                res[e].removeEventListener(interactionSelectors[i].event, interactionEventHandler);
+                res[e].addEventListener(interactionSelectors[i].event, interactionEventHandler);
             }
         }
     }
+}
+
+function interactionEventHandler(event) {
+    var parentID = event.target.attributes["parentID"].value,
+        configColumn = event.target.attributes["configColumn"].value,
+        attributeSelector = event.target.attributes['attributeSelector'].value,
+        attribute = getAttribute(attributeSelector, event.target),
+        interaction = {
+            'action': 'interaction',
+            'id': parentID,
+            'column': configColumn,
+            'attribute': attribute
+        };
+    ext.runtime.sendMessage(interaction, function(result){} );
 }
 
 function getAttribute(attribute, domNode){

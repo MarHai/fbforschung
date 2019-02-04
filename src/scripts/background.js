@@ -150,8 +150,8 @@ function handleInformationCall(resp) {
  * @returns {*}
  */
 function processFeed(config, domNode, currentObject, domRects, tabID) {
-    var selectors = config.selectors;
-    var selectedDomNodes = [domNode];
+    var selectors = config.selectors,
+        selectedDomNodes = [domNode];
     if (config.css != "") {
         selectedDomNodes = domNode.querySelectorAll(config.css);
     }
@@ -619,8 +619,8 @@ function processFeedQueue() {
             feedToServer.feed['plugin_version'] = manifestData.version;
             storage.get(configPlace, function (resp) {
                 if(typeof(resp.config) !== 'undefined') {
-                    var config = resp.config;
-                    var version = config.version;
+                    var config = resp.config,
+                        version = config.version;
                     if (version) {
                         feedToServer.feed['config_version'] = version;
                     }
@@ -636,9 +636,9 @@ function processFeedQueue() {
                                 var plugin_uid = resp.plugin_uid;
                                 if (plugin_uid) {
                                     console.log('pushing feed data to the server');
-                                    var sNonce = CryptoJS.lib.WordArray.random(16).toString();
-                                    var sBody = feedToServer.feed;
-                                    var sUrl = 'https://fbforschung.de/posts';
+                                    var sNonce = CryptoJS.lib.WordArray.random(16).toString(),
+                                        sBody = feedToServer.feed,
+                                        sUrl = 'https://fbforschung.de/posts';
                                     axios.post(sUrl, sBody,
                                         {
                                             headers: {
@@ -826,12 +826,12 @@ function restRegister(responseFunction) {
             storage.get('identifier_human', function (resp) {
                 var human = resp.identifier_human;
                 if (human) {
-                    var sNonce = CryptoJS.lib.WordArray.random(16).toString();
-                    var sBody = {        //Body to be sent
-                        "identifier_human": human,
-                        "identifier_password": password
-                    };
-                    var _sUrl = 'https://fbforschung.de/register'; //serverside url to call
+                    var sNonce = CryptoJS.lib.WordArray.random(16).toString(),
+                        sBody = {        //Body to be sent
+                            "identifier_human": human,
+                            "identifier_password": password
+                        },
+                        _sUrl = 'https://fbforschung.de/register'; //serverside url to call
                     axios.post(_sUrl, sBody,
                         {
                             headers: {
@@ -905,8 +905,8 @@ function getRequest(_sUrl, _sBody, _fCallback) {
  * @param _sBody
  */
 function restGET(_nPlugin, _sUrl, _sPassword, _fCallback, _sBody) {
-    var strBody = "";
-    var sNonce = CryptoJS.lib.WordArray.random(16).toString();
+    var strBody = "",
+        sNonce = CryptoJS.lib.WordArray.random(16).toString();
     if (_sBody != null && _sBody != '') {
         strBody = JSON.stringify(_sBody);
         axios.get(_sUrl, _sBody,
