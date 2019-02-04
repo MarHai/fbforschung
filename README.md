@@ -12,13 +12,12 @@ The final plug-in is available in various plug-in stores, such as [Google Chrome
 
 The following tasks can be used when you want to start developing the extension and want to enable live reload:
 - `npm run chrome-watch`
-- `npm run opera-watch`
 - `npm run firefox-watch`
 
-### Chrome and Opera
-1. Open Chrome/Opera browser and navigate to chrome://extensions
+### Chrome
+1. Open Chrome browser and navigate to chrome://extensions
 1. Select "Developer Mode" and then click "Load unpacked extension..."
-1. From the file browser, choose to `FBForschung/build/chrome` or (`extension-boilerplate/build/opera`)
+1. From the file browser, choose to `FBForschung/build/chrome`
 
 ### Firefox
 1. Open Firefox browser and navigate to about:debugging
