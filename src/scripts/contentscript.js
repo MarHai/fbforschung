@@ -45,32 +45,37 @@ function scrollHandler() {
     }, function(response){});
 
     //set up interaction handlers
-    ext.runtime.sendMessage({action:'getInteractionSelectors'}, function(res){
-        interactionSelectors = res;
-    });
+    if(interactionSelectors.length == 0) {
+        ext.runtime.sendMessage({action: 'getInteractionSelectors'}, function (res) {
+            interactionSelectors = res;
+        });
+    }
     for (var i=0; i< interactionSelectors.length;i++) {
-        var posts = document.querySelectorAll(interactionSelectors[i].parentCss);
-        for (var u=0;u< posts.length; u++){
-            var res = posts[u].querySelectorAll(interactionSelectors[i].css);
-            for (var e = 0; e < res.length; e++) {
-                res[e].setAttribute('parentID', posts[u].id);
-                res[e].setAttribute('configColumn',interactionSelectors[i].configColumn);
-                res[e].setAttribute('attributeSelector',interactionSelectors[i].attribute);
-                res[e].removeEventListener(interactionSelectors[i].event, interactionEventHandler);
-                res[e].addEventListener(interactionSelectors[i].event, interactionEventHandler);
+        var interactionElements = document.querySelectorAll(interactionSelectors[i].totalCss);
+        for (var j = 0; j < interactionElements.length; j++) {
+            var postElem = interactionElements[j];
+            while ((postElem = postElem.parentElement)) {
+                if (postElem.matches(interactionSelectors[i].postCss)) {
+                    interactionElements[j].setAttribute('data-postid', postElem.id);
+                    interactionElements[j].setAttribute('data-configcolumn', interactionSelectors[i].configColumn);
+                    interactionElements[j].setAttribute('data-attr', interactionSelectors[i].attribute);
+                    interactionElements[j].removeEventListener(interactionSelectors[i].event, interactionEventHandler);
+                    interactionElements[j].addEventListener(interactionSelectors[i].event, interactionEventHandler);
+                    break;
+                }
             }
         }
     }
 }
 
 function interactionEventHandler(event) {
-    var parentID = event.target.attributes["parentID"].value,
-        configColumn = event.target.attributes["configColumn"].value,
-        attributeSelector = event.target.attributes['attributeSelector'].value,
+    var postID = event.target.attributes["data-postid"].value,
+        configColumn = event.target.attributes["data-configcolumn"].value,
+        attributeSelector = event.target.attributes['data-attr'].value,
         attribute = getAttribute(attributeSelector, event.target),
         interaction = {
             'action': 'interaction',
-            'id': parentID,
+            'id': postID,
             'column': configColumn,
             'attribute': attribute
         };
@@ -109,7 +114,6 @@ function getAttribute(attribute, domNode){
 }
 
 
-window.addEventListener('state-changed', stateUpdated);
 window.addEventListener('scroll', function(_oEvent) {
         currentScrollPosition = document.body.getBoundingClientRect().top *(-1);
         var currentInterval = Math.floor(currentScrollPosition/collectorInterval);
@@ -119,18 +123,5 @@ window.addEventListener('scroll', function(_oEvent) {
         }
     });
 window.addEventListener('load', function() {
-        document.head.appendChild(document.createElement('script')).text = '(' +
-            function () {
-                // injected DOM script is not a content script anymore,
-                // it can modify objects and functions of the page
-                var _pushState = history.pushState;
-                history.pushState = function (state, title, url) {
-                    _pushState.call(this, state, title, url);
-                    window.dispatchEvent(new CustomEvent('state-changed', {
-                        detail: state
-                    }));
-                };
-                // repeat the above for replaceState too
-            } + ')(); this.remove();'; // remove the DOM script element
         stateUpdated();
     });

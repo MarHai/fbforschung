@@ -169,10 +169,11 @@ function processFeed(config, domNode, currentObject, domRects, tabID) {
         }
         if (foundSelector == false) {
             interactionSelector.push({
-                'css': runningcssSelector.split('[-~-]').join(' '),
+                'elemCss': config.css,
+                'postCss': postCssSelector,
+                'totalCss': runningcssSelector.split('[-~-]').join(' '),
                 'id': config.uid,
                 'event': config.event,
-                'parentCss': postCssSelector,
                 'attribute': config.attribute,
                 'configColumn': config.column
             });
@@ -548,42 +549,42 @@ ext.runtime.onMessage.addListener(
                 storage.get('session_uid', function (resp) {
                     if (resp.session_uid) {
                         interactionPost['session_uid'] = resp.session_uid;
-                    }
-                });
-                interactionPost['facebook_id'] = request.id;
-                interactionPost['type'] = request.column.split('_')[1];
-                if (request.attribute != null) {
-                    interactionPost['attribute'] = request.attribute;
-                }
-                storage.get('identifier_password', function (resp) {
-                    var password = resp.identifier_password;
-                    if (password) {
-                        storage.get('plugin_uid', function (resp) {
-                            var plugin_uid = resp.plugin_uid;
-                            if (plugin_uid) {
-                                var sNonce = CryptoJS.lib.WordArray.random(16).toString();
-                                var sBody = interactionPost;
-                                var sUrl = 'https://fbforschung.de/interaction'; //serverside url to call
-                                axios.post(sUrl, sBody,
-                                    {
-                                        headers: {
-                                            "X-Auth-Key": sNonce,
-                                            "X-Auth-Checksum": CryptoJS.HmacSHA1(sUrl + JSON.stringify(sBody) + sNonce, password).toString(),
-                                            "X-Auth-Plugin": plugin_uid,
-                                            "Content-Type": "application/json"
-                                        }
-                                    })
-                                    .then(function(response) {
-                                        storage.set({
-                                                session_uid: response.data.result['uid']
-                                            }, function () {});
-                                    })
-                                    .catch(function(error) {
-                                        storage.set({
-                                            toBeSent: sBody,
-                                            createdAt: (new Date()).toString()
-                                        }, function () {});
-                                    });
+                        interactionPost['facebook_id'] = request.id;
+                        interactionPost['type'] = request.column.split('_')[1];
+                        if (request.attribute != null) {
+                            interactionPost['attribute'] = request.attribute;
+                        }
+                        storage.get('identifier_password', function (resp) {
+                            var password = resp.identifier_password;
+                            if (password) {
+                                storage.get('plugin_uid', function (resp) {
+                                    var plugin_uid = resp.plugin_uid;
+                                    if (plugin_uid) {
+                                        var sNonce = CryptoJS.lib.WordArray.random(16).toString();
+                                        var sBody = interactionPost;
+                                        var sUrl = 'https://fbforschung.de/interaction'; //serverside url to call
+                                        axios.post(sUrl, sBody,
+                                            {
+                                                headers: {
+                                                    "X-Auth-Key": sNonce,
+                                                    "X-Auth-Checksum": CryptoJS.HmacSHA1(sUrl + JSON.stringify(sBody) + sNonce, password).toString(),
+                                                    "X-Auth-Plugin": plugin_uid,
+                                                    "Content-Type": "application/json"
+                                                }
+                                            })
+                                            .then(function(response) {
+                                                storage.set({
+                                                        session_uid: response.data.result['uid']
+                                                    }, function () {});
+                                            })
+                                            .catch(function(error) {
+                                                storage.set({
+                                                    toBeSent: sBody,
+                                                    createdAt: (new Date()).toString()
+                                                }, function () {});
+                                            });
+                                    }
+                                });
                             }
                         });
                     }
