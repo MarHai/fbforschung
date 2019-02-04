@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/options.css">
+    <title>FBforschung: Einstellungen</title>
+</head>
+<body>
+    <dl class="container-fluid">
+        <dt>Untersuchungsserver</dt>
+        <dd><p><a href="https://fbforschung.de">https://fbforschung.de</a></p></dd>
+
+        <dt>Plugin-Version</dt>
+        <dd><p id="PluginVersion"></p></dd>
+
+        <dt>Konfigurationsversion</dt>
+        <dd>
+            <p id="ConfigVersion" class="mb-1"></p>
+            <a id="configBtn" class="btn btn-secondary btn-sm" href="#" role="button">Konfiguration neu laden</a>
+        </dd>
+
+        <dt>Test-Konfiguration</dt>
+        <dd>
+            <label>
+                <input id="devConfigCheck" type="checkbox" />
+                Zu Entwicklungs- und Testzwecken kann diese Option aktiviert werden, um statt der derzeitigen Live-Konfiguration die aktuelle Entwicklungs-Konfiguration vom Server zu beziehen und zu verwenden.
+            </label>
+        </dd>
+
+        <dt>EingeloggteR NutzerIn</dt>
+        <dd>
+            <p id="HumanID" class="mb-1"></p>
+            <a id="resetBtn" class="btn btn-secondary btn-sm" href="#" role="button">abmelden und neu registrieren</a>
+        </dd>
+    </dl>
+    <script src="scripts/options.js"></script>
+</body>
+</html>
