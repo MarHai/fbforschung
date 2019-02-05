@@ -1,7 +1,6 @@
 import ext from "./utils/ext";
 
-var interactionSelectors = [],
-    currentScrollPosition = 0,
+var currentScrollPosition = 0,
     lastCollectedInterval = -1,
     collectorInterval = 100,
     rects = {},
@@ -42,33 +41,32 @@ function scrollHandler() {
         data: document.body.innerHTML,
         rect: JSON.stringify(rects),
         scrolledUntil:lastCollectedInterval*collectorInterval
-    }, function(response){});
+    }, function(response){
 
-    //set up interaction handlers
-    if(interactionSelectors.length == 0) {
-        ext.runtime.sendMessage({action: 'getInteractionSelectors'}, function (res) {
-            interactionSelectors = res;
-        });
-    }
-    for (var i=0; i< interactionSelectors.length;i++) {
-        var interactionElements = document.querySelectorAll(interactionSelectors[i].totalCss);
-        for (var j = 0; j < interactionElements.length; j++) {
-            var postElem = interactionElements[j];
-            while ((postElem = postElem.parentElement)) {
-                if (postElem.matches(interactionSelectors[i].postCss)) {
-                    interactionElements[j].setAttribute('data-postid', postElem.id);
-                    interactionElements[j].setAttribute('data-configcolumn', interactionSelectors[i].configColumn);
-                    interactionElements[j].setAttribute('data-attr', interactionSelectors[i].attribute);
-                    interactionElements[j].removeEventListener(interactionSelectors[i].event, interactionEventHandler);
-                    interactionElements[j].addEventListener(interactionSelectors[i].event, interactionEventHandler);
-                    break;
+        //set up interaction handlers
+        ext.runtime.sendMessage({action: 'getInteractionSelectors'}, function (interactionSelectors) {
+            for (var i = 0; i < interactionSelectors.length; i++) {
+                var interactionElements = document.querySelectorAll(interactionSelectors[i].totalCss);
+                for (var j = 0; j < interactionElements.length; j++) {
+                    var postElem = interactionElements[j];
+                    while ((postElem = postElem.parentElement)) {
+                        if (postElem.matches(interactionSelectors[i].postCss)) {
+                            if (!interactionElements[j].hasAttribute('data-postid')) {
+                                interactionElements[j].setAttribute('data-postid', postElem.id);
+                                interactionElements[j].setAttribute('data-configcolumn', interactionSelectors[i].configColumn);
+                                interactionElements[j].setAttribute('data-attr', interactionSelectors[i].attribute);
+                                interactionElements[j].addEventListener(interactionSelectors[i].event, interactionHandler);
+                            }
+                            break;
+                        }
+                    }
                 }
             }
-        }
-    }
+        });
+    });
 }
 
-function interactionEventHandler(event) {
+function interactionHandler(event) {
     var postID = event.target.attributes["data-postid"].value,
         configColumn = event.target.attributes["data-configcolumn"].value,
         attributeSelector = event.target.attributes['data-attr'].value,
@@ -115,13 +113,36 @@ function getAttribute(attribute, domNode){
 
 
 window.addEventListener('scroll', function(_oEvent) {
-        currentScrollPosition = document.body.getBoundingClientRect().top *(-1);
-        var currentInterval = Math.floor(currentScrollPosition/collectorInterval);
-        if(currentInterval != lastCollectedInterval && initiated) {
-            scrollHandler();
-            lastCollectedInterval = currentInterval;
-        }
-    });
+    currentScrollPosition = document.body.getBoundingClientRect().top *(-1);
+    var currentInterval = Math.floor(currentScrollPosition/collectorInterval);
+    if(currentInterval != lastCollectedInterval && initiated) {
+        scrollHandler();
+        lastCollectedInterval = currentInterval;
+    }
+});
+
+
 window.addEventListener('load', function() {
-        stateUpdated();
-    });
+    // allow stateUpdated() before unload (i.e., before clicking an outgoing link)
+    document.head.appendChild(document.createElement('script')).text = '(' +
+        function () {
+            var _pushState = history.pushState,
+                _replaceState = history.replaceState;
+            history.pushState = function (state, title, url) {
+                stateUpdated();
+                _pushState.call(this, state, title, url);
+            };
+            history.replaceState = function (state, title, url) {
+                stateUpdated();
+                _replaceState.call(this, state, title, url);
+            };
+        } + ')();' +
+        // remove the DOM script element
+        'if(typeof(this.remove) !== \'undefined\') this.remove();';
+    stateUpdated();
+});
+
+
+window.addEventListener('beforeunload', function () {
+    stateUpdated();
+});
