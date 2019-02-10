@@ -2,7 +2,7 @@
   "name": "FBforschung.de Browser-Plugin",
   "version": "1.0.2",
   "manifest_version": 2,
-  "description": "Dieses Browser-Plugin sammelt sehr selektiv öffentliche Informationen im Rahmen der Facebook-Nutzung für das Forschungsprojekt FBforschung.de.",
+  "description": "Dieses Browser-Plugin sammelt selektiv öffentliche Informationen der Facebook-Nutzung für das Forschungsprojekt FBforschung.de.",
   "icons": {
     "16": "images/icon-16-inactive.png",
     "128": "images/icon-128.png"
