@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "plugin_version": {
+      "title": "The current plug-in version, as defined in manifest files and dependent on plug-in stores",
+      "type": "string",
+      "examples": [
+        "1.0.2"
+      ]
+    },
+    "config_version": {
+      "title": "The config version that has been used to extract these posts",
+      "type": "string",
+      "examples": [
+        "1.19.2",
+        "1.12.2-dev"
+      ]
+    },
+    "browser": {
+      "title": "The navigator's identification string",
+      "type": "string",
+      "examples": [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36"
+      ]
+    },
+    "language": {
+      "title": "The browser's language specification, specified as two-letter country codes (ISO 639-1) and regions",
+      "type": "string",
+      "examples": [
+        "en-US",
+        "de-AT"
+      ]
+    },
+    "scrolled_until": {
+      "title": "Number of pixels to which the user has scrolled in this session",
+      "type": "integer"
+    },
+    "session_uid": {
+      "title": "The session's ID to which these posts should be appended",
+      "description": "If this is empty/missing, a new session is created",
+      "type": "integer"
+    },
+    "posts": {
+      "title": "List of posts, each of which contains config 'columns' as keys",
+      "description": "Config elements with 'type' set to 'session' are included on this call's top level",
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

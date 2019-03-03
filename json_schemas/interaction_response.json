@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "status"
+  ],
+  "properties": {
+    "status": {
+      "title": "HTTP-like status code",
+      "type": "integer",
+      "enum": [
+        200,
+        400,
+        403,
+        404,
+        405,
+        500
+      ]
+    }
+  },
+  "if": {
+    "properties": {
+      "status": {
+        "const": 200
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "result": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "uid": {
+              "title": "The session's uid to which the interaction has been added",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "uid"
+          ]
+        }
+      }
+    },
+    "required": [
+      "status",
+      "result"
+    ]
+  },
+  "else": {
+    "properties": {
+      "error": {
+        "title": "Error message",
+        "type": "string",
+        "examples": [
+          "Session identification missing"
+        ]
+      }
+    },
+    "required": [
+      "status",
+      "error"
+    ]
+  }
+}

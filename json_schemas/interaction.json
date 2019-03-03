@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "session_uid": {
+      "title": "The session's identifier",
+      "type": "integer"
+    },
+    "facebook_id": {
+      "title": "The post's identifier",
+      "description": "Note that this will hopefully be renamed in some future version",
+      "type": "string"
+    },
+    "type": {
+      "title": "The event type that had been specified in the config",
+      "type": "string",
+      "examples": [
+        "click"
+      ]
+    },
+    "attribute": {
+      "title": "If specified in the config, this includes the corresponding attribute value",
+      "type": "string"
+    }
+  }
+}

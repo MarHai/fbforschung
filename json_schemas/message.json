@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "mark_shown": {
+      "title": "A message's UID to indicate that a user has been shown the message at this very time",
+      "type": "integer"
+    },
+    "mark_read": {
+      "title": "A message's UID to indicate that a user has read the message at this very time",
+      "type": "integer"
+    },
+    "mark_clicked": {
+      "title": "A message's UID to indicate that a user has actually clicked the message at this very time",
+      "type": "integer"
+    }
+  }
+}

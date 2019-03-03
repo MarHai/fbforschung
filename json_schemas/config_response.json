@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "status"
+  ],
+  "definitions": {
+    "selector": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "title": "Identifier of the config element",
+          "type": "integer"
+        },
+        "tstamp": {
+          "title": "Unix timestamp of when this config element was last updated",
+          "type": "integer"
+        },
+        "nodetype": {
+          "title": "'root' specifies entry points, 'post' iteratively create posts, 'standard' do nothing",
+          "type": "string",
+          "enum": [
+            "standard",
+            "post",
+            "root",
+            "root_default",
+            "root_dev"
+          ],
+          "default": "standard"
+        },
+        "column": {
+          "title": "A name for later (server-side) data handling",
+          "type": "string"
+        },
+        "description": {
+          "title": "String description of this config element",
+          "type": "string"
+        },
+        "type": {
+          "title": "The layer of data to which this config element's value belongs to",
+          "type": "string",
+          "enum": [
+            "session",
+            "post",
+            "interaction",
+            ""
+          ]
+        },
+        "css": {
+          "title": "The CSS3 path to identify the element within the scope of the parent selector",
+          "type": "string"
+        },
+        "attribute": {
+          "title": "The value of the element to extract",
+          "description": "For data-, attr-, and static-, the crucial part is what comes after the minus ('-')",
+          "type": "string",
+          "pattern": "(data|attr)-[a-zA-Z0-9_-]+|static-[a-zA-Z0-9_-]*|text|html|exists|count|width|height|top|left|"
+        },
+        "event": {
+          "title": "The event to which this (interaction) handler should listen to",
+          "type": "string",
+          "examples": [
+            "click"
+          ]
+        },
+        "anonymize": {
+          "title": "If set to true, the value will be MD5'd before returning to the server",
+          "type": "boolean",
+          "default": false
+        },
+        "if": {
+          "title": "If set to true, the specified IF conditions need to be met",
+          "type": "boolean",
+          "default": false
+        },
+        "if_css": {
+          "title": "CSS3 selector to apply for checking IF conditions",
+          "type": "string"
+        },
+        "if_attribute": {
+          "title": "The value of the if_css element to extract",
+          "description": "For data-, attr-, and static-, the crucial part is what comes after the minus ('-')",
+          "type": "string",
+          "pattern": "(data|attr)-[a-zA-Z0-9_-]+|static-[a-zA-Z0-9_-]*|text|html|exists|count|width|height|top|left|"
+        },
+        "if_comparison": {
+          "title": "Specifies how to compare the value retrieved from if_attribute with if_value",
+          "type": "string",
+          "enum": [
+            "equal",
+            "unequal",
+            "gt",
+            "gteq",
+            "lt",
+            "lteq",
+            "notcontains",
+            "contains",
+            "regex",
+            "notregex",
+            ""
+          ]
+        },
+        "if_value": {
+          "title": "The value to compare if_attribute (using if_comparison) against",
+          "type": "string"
+        },
+        "sort": {
+          "title": "An indicator on the order of how to handle the configuration (typically applied before response)",
+          "type": "integer"
+        },
+        "selectors": {
+          "title": "List of child selectors",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/selector"
+          },
+          "default": []
+        }
+      },
+      "required": [
+        "nodetype",
+        "type",
+        "column",
+        "css",
+        "attribute",
+        "selectors"
+      ]
+    }
+  },
+  "properties": {
+    "status": {
+      "title": "HTTP-like status code",
+      "type": "integer",
+      "enum": [
+        200,
+        400,
+        403,
+        404
+      ]
+    }
+  },
+  "if": {
+    "properties": {
+      "status": {
+        "const": 200
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "result": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "title": "Version number",
+            "type": "string",
+            "examples": [
+              "1.12.4",
+              "0.1.2-dev"
+            ]
+          },
+          "selectors": {
+            "title": "Entry-level selector, ready for (almost) infinite CSS child parsing",
+            "$ref": "#/definitions/selector"
+          }
+        },
+        "required": [
+          "version",
+          "selectors"
+        ]
+      }
+    },
+    "required": [
+      "status",
+      "result"
+    ]
+  },
+  "else": {
+    "properties": {
+      "error": {
+        "title": "Error message",
+        "type": "string",
+        "examples": [
+          "Config not found"
+        ]
+      }
+    },
+    "required": [
+      "status",
+      "error"
+    ]
+  }
+}

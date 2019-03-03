@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "message": {
+      "title": "The message's UID which should be sent to the given email address",
+      "type": "integer"
+    },
+    "email": {
+      "title": "The email address to which the specified message should be sent",
+      "type": "string",
+      "format": "email"
+    }
+  }
+}

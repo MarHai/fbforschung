@@ -4,7 +4,7 @@ This is a browser plug-in to observe human online behavior, for example in the r
 
 ## Installation
 
-The final plug-in is available in various plug-in stores, such as [Google Chrome](https://chrome.google.com/webstore/detail/fbforschungde-browser-plu/faemgdmnkflbiakkkchdgpaphljccpch) and [Mozilla Firefox](https://addons.mozilla.org/firefox/addon/fbforschung/). For developmental installation, follow the steps below.
+The currently used plug-in is available in various plug-in stores, such as [Google Chrome](https://chrome.google.com/webstore/detail/fbforschungde-browser-plu/faemgdmnkflbiakkkchdgpaphljccpch) and [Mozilla Firefox](https://addons.mozilla.org/firefox/addon/fbforschung/). For developmental installation, follow the steps below.
 
 1. Clone the repository `git clone https://github.com/marhai/fbforschung`
 1. Run `npm install`
@@ -25,6 +25,9 @@ The following tasks can be used when you want to start developing the extension 
 
 ## Distribution
 Run `npm run dist` to create a zipped, production-ready extension for each browser.
+
+## Server Development
+For the central server to be properly developed, you need to follow [JSON schemas for communication](json_schemas/README.md) which are provided within the [json_schemas/](json_schemas) folder.
 
 ## Contact
 Extensive contact information is available under <https://fbforschung.de/impressum>, for quick contact use [@MarHai](https://github.com/MarHai). 
