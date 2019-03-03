@@ -13,7 +13,8 @@ var nextMessage,
     feedToServerQueue = [],
     feedQueueInProgress = false,
     postCssSelector = "",
-    runningcssSelector = "";
+    runningcssSelector = "",
+    serverBaseUrl = "https://fbforschung.de/";
 
 ext.runtime.onInstalled.addListener(function() {
     ext.storage.sync.clear();
@@ -38,7 +39,7 @@ storage.get("usingDevConfig", function (resp) {
  * checks for new messages from the server
  */
 function checkIfMessageUpdate() {
-    getRequest('https://fbforschung.de/message', null, handleMessageCheck);
+    getRequest(serverBaseUrl + 'message', null, handleMessageCheck);
 }
 
 /**
@@ -54,7 +55,7 @@ function isUsingDevConfig() {
  * @param _fCallback    function to call after finishing
  */
 function getConfig(_fCallback) {
-    getRequest("https://fbforschung.de/config", '', function(response) {
+    getRequest(serverBaseUrl + "config", '', function(response) {
         storage.set({config: response.result}, function () {
             console.log('new main config set (now version ' + response.result.version + ')');
             if(_fCallback) {
@@ -69,7 +70,7 @@ function getConfig(_fCallback) {
  * @param _fCallback    function to call after finishing
  */
 function getDevConfig(_fCallback) {
-    getRequest("https://fbforschung.de/config/dev", '', function(response) {
+    getRequest(serverBaseUrl + "config/dev", '', function(response) {
         storage.set({devconfig: response.result}, function () {
             console.log('new dev config set (now version ' + response.result.version + ')');
             if(_fCallback) {
@@ -235,7 +236,7 @@ function sendAsEmail(body) {
                 if (password) {
                     var sNonce = CryptoJS.lib.WordArray.random(16).toString();
                     var sBody = body;
-                    var sUrl = 'https://fbforschung.de/message/email'; //serverside url to call
+                    var sUrl = serverBaseUrl + 'message/email'; //serverside url to call
                     axios.post(sUrl, sBody,
                         {
                             headers: {
@@ -274,7 +275,7 @@ function sendMessageResponse(body) {
                 if (password) {
                     var sNonce = CryptoJS.lib.WordArray.random(16).toString();
                     var sBody = body;
-                    var sUrl = 'https://fbforschung.de/message'; //serverside url to call
+                    var sUrl = serverBaseUrl + 'message'; //serverside url to call
                     axios.post(sUrl, sBody,
                         {
                             headers: {
@@ -451,7 +452,7 @@ ext.runtime.onMessage.addListener(
                     storage.get('devconfig', function (resp) {
                         var config = resp.config;
                         if (config) {
-                            getRequest('https://fbforschung.de/config/dev/' + config.version, null, handleConfigCheck);
+                            getRequest(serverBaseUrl + 'config/dev/' + config.version, null, handleConfigCheck);
                         } else {
                             getDevConfig();
                         }
@@ -460,7 +461,7 @@ ext.runtime.onMessage.addListener(
                     storage.get('config', function (resp) {
                         var config = resp.config;
                         if (config) {
-                            getRequest('https://fbforschung.de/config/' + config.version, null, handleConfigCheck);
+                            getRequest(serverBaseUrl + 'config/' + config.version, null, handleConfigCheck);
                         } else {
                             getConfig();
                         }
@@ -562,7 +563,7 @@ ext.runtime.onMessage.addListener(
                                     if (plugin_uid) {
                                         var sNonce = CryptoJS.lib.WordArray.random(16).toString();
                                         var sBody = interactionPost;
-                                        var sUrl = 'https://fbforschung.de/interaction'; //serverside url to call
+                                        var sUrl = serverBaseUrl + 'interaction'; //serverside url to call
                                         axios.post(sUrl, sBody,
                                             {
                                                 headers: {
@@ -639,7 +640,7 @@ function processFeedQueue() {
                                     console.log('pushing feed data to the server');
                                     var sNonce = CryptoJS.lib.WordArray.random(16).toString(),
                                         sBody = feedToServer.feed,
-                                        sUrl = 'https://fbforschung.de/posts';
+                                        sUrl = serverBaseUrl + 'posts';
                                     axios.post(sUrl, sBody,
                                         {
                                             headers: {
@@ -832,7 +833,7 @@ function restRegister(responseFunction) {
                             "identifier_human": human,
                             "identifier_password": password
                         },
-                        _sUrl = 'https://fbforschung.de/register'; //serverside url to call
+                        _sUrl = serverBaseUrl + 'register'; //serverside url to call
                     axios.post(_sUrl, sBody,
                         {
                             headers: {
