@@ -39,7 +39,10 @@
     "session_uid": {
       "title": "The session's ID to which these posts should be appended",
       "description": "If this is empty/missing, a new session is created",
-      "type": "integer"
+      "type": [
+        "integer",
+        "null"
+      ]
     },
     "posts": {
       "title": "List of posts, each of which contains config 'columns' as keys",
