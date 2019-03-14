@@ -375,7 +375,7 @@ ext.runtime.onMessage.addListener(
         switch (request.action) {
             case "updateIcon":
                 var iconPath = "images/icon-16-inactive.png";
-                if (request.facebookopen == 'true' && plugin_active == true) {
+                if((request.facebookopen == 'true' || request.facebookopen) && plugin_active == true) {
                     iconPath = "images/icon-16.png";
                 }
                 ext.browserAction.setIcon({
