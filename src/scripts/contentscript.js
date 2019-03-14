@@ -11,7 +11,6 @@ var lastScrollPosition = -1,
  */
 function updateState() {
     var opened = document.location.hostname.indexOf(limitToHostname) >= 0;
-    console.log('updateState with facebookopen ' + opened);
     ext.runtime.sendMessage({
             action: 'updateIcon',
             facebookopen: opened
